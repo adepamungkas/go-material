@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/gofrs/uuid"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"net/http"
@@ -35,70 +35,70 @@ func init() {
 
 func main() {
 
-	router := gin.Default()
-	router.Use(cors.Default())
+	//router := gin.Default()
+	//router.Use(cors.Default())
+	//
+	//v1 := router.Group("/api/v1/materials")
+	//{
+	//	v1.POST("/", createMaterial)
+	//	v1.GET("/", getAllMaterial)
+	//	v1.GET("/:ID", getMaterialById)
+	//	v1.PUT("/:ID", updateMaterial)
+	//	v1.DELETE("/:ID", deleteMaterial)
+	//}
+	//router.Run()
 
-	v1 := router.Group("/api/v1/materials")
-	{
-		v1.POST("/", createMaterial)
-		v1.GET("/", getAllMaterial)
-		v1.GET("/:ID", getMaterialById)
-		v1.PUT("/:ID", updateMaterial)
-		v1.DELETE("/:ID", deleteMaterial)
-	}
-	router.Run()
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "Hello! you've requested %s\n", r.URL.Path)
+	})
 
-	//http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-	//	fmt.Fprintf(w, "Hello! you've requested %s\n", r.URL.Path)
-	//})
-	//
-	//http.HandleFunc("/cached", func(w http.ResponseWriter, r *http.Request) {
-	//	maxAgeParams, ok := r.URL.Query()["max-age"]
-	//	if ok && len(maxAgeParams) > 0 {
-	//		maxAge, _ := strconv.Atoi(maxAgeParams[0])
-	//		w.Header().Set("Cache-Control", fmt.Sprintf("max-age=%d", maxAge))
-	//	}
-	//	requestID := uuid.Must(uuid.NewV4())
-	//	fmt.Fprintf(w, requestID.String())
-	//})
-	//
-	//http.HandleFunc("/headers", func(w http.ResponseWriter, r *http.Request) {
-	//	keys, ok := r.URL.Query()["key"]
-	//	if ok && len(keys) > 0 {
-	//		fmt.Fprintf(w, r.Header.Get(keys[0]))
-	//		return
-	//	}
-	//	headers := []string{}
-	//	for key, values := range r.Header {
-	//		headers = append(headers, fmt.Sprintf("%s=%s", key, strings.Join(values, ",")))
-	//	}
-	//	fmt.Fprintf(w, strings.Join(headers, "\n"))
-	//})
-	//
-	//http.HandleFunc("/env", func(w http.ResponseWriter, r *http.Request) {
-	//	keys, ok := r.URL.Query()["key"]
-	//	if ok && len(keys) > 0 {
-	//		fmt.Fprintf(w, os.Getenv(keys[0]))
-	//		return
-	//	}
-	//	envs := []string{}
-	//	for _, env := range os.Environ() {
-	//		envs = append(envs, env)
-	//	}
-	//	fmt.Fprintf(w, strings.Join(envs, "\n"))
-	//})
-	//
-	//http.HandleFunc("/status", func(w http.ResponseWriter, r *http.Request) {
-	//	codeParams, ok := r.URL.Query()["code"]
-	//	if ok && len(codeParams) > 0 {
-	//		statusCode, _ := strconv.Atoi(codeParams[0])
-	//		if statusCode >= 200 && statusCode < 600 {
-	//			w.WriteHeader(statusCode)
-	//		}
-	//	}
-	//	requestID := uuid.Must(uuid.NewV4())
-	//	fmt.Fprintf(w, requestID.String())
-	//})
+	http.HandleFunc("/cached", func(w http.ResponseWriter, r *http.Request) {
+		maxAgeParams, ok := r.URL.Query()["max-age"]
+		if ok && len(maxAgeParams) > 0 {
+			maxAge, _ := strconv.Atoi(maxAgeParams[0])
+			w.Header().Set("Cache-Control", fmt.Sprintf("max-age=%d", maxAge))
+		}
+		requestID := uuid.Must(uuid.NewV4())
+		fmt.Fprintf(w, requestID.String())
+	})
+
+	http.HandleFunc("/headers", func(w http.ResponseWriter, r *http.Request) {
+		keys, ok := r.URL.Query()["key"]
+		if ok && len(keys) > 0 {
+			fmt.Fprintf(w, r.Header.Get(keys[0]))
+			return
+		}
+		headers := []string{}
+		for key, values := range r.Header {
+			headers = append(headers, fmt.Sprintf("%s=%s", key, strings.Join(values, ",")))
+		}
+		fmt.Fprintf(w, strings.Join(headers, "\n"))
+	})
+
+	http.HandleFunc("/env", func(w http.ResponseWriter, r *http.Request) {
+		keys, ok := r.URL.Query()["key"]
+		if ok && len(keys) > 0 {
+			fmt.Fprintf(w, os.Getenv(keys[0]))
+			return
+		}
+		envs := []string{}
+		for _, env := range os.Environ() {
+			envs = append(envs, env)
+		}
+		fmt.Fprintf(w, strings.Join(envs, "\n"))
+	})
+
+	http.HandleFunc("/status", func(w http.ResponseWriter, r *http.Request) {
+		codeParams, ok := r.URL.Query()["code"]
+		if ok && len(codeParams) > 0 {
+			statusCode, _ := strconv.Atoi(codeParams[0])
+			if statusCode >= 200 && statusCode < 600 {
+				w.WriteHeader(statusCode)
+			}
+		}
+		requestID := uuid.Must(uuid.NewV4())
+		fmt.Fprintf(w, requestID.String())
+	})
 
 	port := os.Getenv("PORT")
 	if port == "" {
