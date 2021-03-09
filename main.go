@@ -17,7 +17,7 @@ func init() {
 	//open a db connection
 	var err error
 
-//	db, err = gorm.Open("mysql", "root:@(localhost:3306)/misdb?charset=utf8&parseTime=True&loc=Local")
+	//db, err = gorm.Open("mysql", "root:@(localhost:3306)/misdb?charset=utf8&parseTime=True&loc=Local")
 	db, err = gorm.Open("mysql", "root:@/materialdb")
 
 	if err != nil {
