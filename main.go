@@ -16,13 +16,9 @@ var db *gorm.DB
 func init() {
 	//open a db connection
 	var err error
-	//db, err = gorm.Open("mysql", "doadmin:d77gjs15qccjf34k@(dbmysql-do-user-8830210-0.b.db.ondigitalocean.com)/defaultdb?charset=utf8&parseTime=True&loc=Local")
-	//user:password@(localhost)/dbname?charset=utf8&parseTime=True&loc=Local
-	//mysql://doadmin:k8bxpa54neic0gd5@db-mysql-sgp1-09976-do-user-8830210-0.b.db.ondigitalocean.com:25060/defaultdb?ssl-mode=REQUIRED
-	//db, err = gorm.Open("mysql", "root:@(localhost:3306)/materialdb?charset=utf8&parseTime=True&loc=Local")
+
+//	db, err = gorm.Open("mysql", "root:@(localhost:3306)/misdb?charset=utf8&parseTime=True&loc=Local")
 	db, err = gorm.Open("mysql", "root:@/materialdb")
-	//db, err = gorm.Open("mysql", "doadmin:k8bxpa54neic0gd5@db-mysql-sgp1-09976-do-user-8830210-0.b.db.ondigitalocean.com:25060/defaultdb?ssl-mode=REQUIRED")
-	//db, err = gorm.Open("postgres", "host=http://127.0.0.1:19153 port=5432 user=postgres dbname=materialdb password=12345")
 
 	if err != nil {
 		panic(err)
@@ -154,7 +150,7 @@ type (
 		Trademark     string `json:"Trademark"`
 		IsBroken bool   `json:"IsBroken"`
 		Color string `json:"Color"`
-		Date time.Time `json:"Date" time_format:"unix"`
+		Date time.Time `json:"Date"`
 		Description string `json:"Description"`
 		InputBy string `json:"InputBy"`
 		Name string `json:"Name"`
@@ -163,13 +159,16 @@ type (
 		Vendor string `json:"Vendor"`
 	}
 )
+
+
 // createMaterial add a new material
 func createMaterial(c *gin.Context) {
 
 	isBroken, _ := strconv.Atoi(c.PostForm("IsBroken"))
 	size, _ :=strconv.Atoi(c.PostForm("Size"))
+	var dateToCreate = c.PostForm("Date")
 
-	date, _ := time.Parse(time.RFC822Z, c.PostForm("Date"))
+	var date, _ = time.Parse(time.RFC3339, dateToCreate)
 	material := materialModel{
 		Trademark: c.PostForm("Trademark"),
 		IsBroken: isBroken,
@@ -275,11 +274,13 @@ func updateMaterial(c *gin.Context) {
 		return
 	}
 
+	var date, _ = time.Parse(time.RFC3339,c.PostForm("Date"))
+	db.Model(&material).Update("Date", date)
 	db.Model(&material).Update(
 		"Trademark", c.PostForm("Trademark"),
 		"Vendor",c.PostForm("Vendor"),
 		"Color",c.PostForm("Color"),
-		"Color",c.PostForm("Type"),
+		"Type",c.PostForm("Type"),
 		"Description",c.PostForm("Description"),
 		"Name",c.PostForm("Name"),
 		"isBroken",c.PostForm("isBroken"),
