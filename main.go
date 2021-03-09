@@ -20,7 +20,7 @@ func init() {
 	//user:password@(localhost)/dbname?charset=utf8&parseTime=True&loc=Local
 	//mysql://doadmin:k8bxpa54neic0gd5@db-mysql-sgp1-09976-do-user-8830210-0.b.db.ondigitalocean.com:25060/defaultdb?ssl-mode=REQUIRED
 	//db, err = gorm.Open("mysql", "root:@(localhost:3306)/materialdb?charset=utf8&parseTime=True&loc=Local")
-	db, err = gorm.Open("mysql", "root:@(localhost:3306)/materialdb")
+	db, err = gorm.Open("mysql", "root:@(http://143.198.204.31:3306)/materialdb")
 	//db, err = gorm.Open("mysql", "doadmin:k8bxpa54neic0gd5@db-mysql-sgp1-09976-do-user-8830210-0.b.db.ondigitalocean.com:25060/defaultdb?ssl-mode=REQUIRED")
 	//db, err = gorm.Open("postgres", "host=http://127.0.0.1:19153 port=5432 user=postgres dbname=materialdb password=12345")
 
